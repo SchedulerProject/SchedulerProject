@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //gridView
         GridView gridView = (GridView) findViewById(R.id.gridView);
         gridView.setNumColumns(7);
         MainCalendar calendar = new MainCalendar(getApplicationContext());
