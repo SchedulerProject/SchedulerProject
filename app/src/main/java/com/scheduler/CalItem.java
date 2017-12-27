@@ -5,7 +5,7 @@ package com.scheduler;
  */
 
 public class CalItem {
-    int memo;
+    String memo;
     int year;
     int month;
     int day;
@@ -15,11 +15,11 @@ public class CalItem {
         this.day = day;
     }
 
-    public int getMemo() {
+    public String getMemo() {
         return memo;
     }
 
-    public void setMemo(int memo) {
+    public void setMemo(String memo) {
         this.memo = memo;
     }
 
