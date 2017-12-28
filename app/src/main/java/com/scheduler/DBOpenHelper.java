@@ -2,10 +2,12 @@ package com.scheduler;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.provider.BaseColumns;
+import android.telecom.Call;
 
 /**
  * DBOpenHelper
@@ -62,7 +64,6 @@ public class DBOpenHelper  {
 
     public DBOpenHelper open() throws SQLException {
         mDBHelper = new DatabaseHelper(mCtx, DATABASE_NAME, null, DATABASE_VERSION);
-        mDB = mDBHelper.getWritableDatabase();
         return this;
     }
 
@@ -71,6 +72,7 @@ public class DBOpenHelper  {
     }
 
     public void addData(int year, int month, int day, int time) {
+        mDB = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CreateDB.year, year);
         values.put(CreateDB.month, month);
@@ -79,6 +81,7 @@ public class DBOpenHelper  {
         long newRowId = mDB.insert(CreateDB._TABLENAME,null,values);
     }
     public void addData(int year, int month, int day, int time, String memo) {
+        mDB = mDBHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(CreateDB.year, year);
         values.put(CreateDB.month, month);
@@ -86,5 +89,82 @@ public class DBOpenHelper  {
         values.put(CreateDB.time, time);
         values.put(CreateDB.memo, memo);
         long newRowId = mDB.insert(CreateDB._TABLENAME,null,values);
+    }
+
+    public CalItem[] viewData(int year,int month, int day) {
+        CalItem[] ci = new CalItem[10];
+        int i = 0;
+        mDB = mDBHelper.getReadableDatabase();
+
+        String[] projection = {
+                CreateDB._ID,
+                CreateDB.year,
+                CreateDB.month,
+                CreateDB.day,
+                CreateDB.time
+        };
+        String selection = CreateDB.day + " = ?";
+        String[] selectionArgs = {day + ""};
+        String sortOrder = CreateDB.day + " DESC";
+
+        Cursor c = mDB.query(
+                CreateDB._TABLENAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        c.moveToFirst();
+        while (!c.isAfterLast())
+            if (c.getInt(c.getColumnIndexOrThrow(CreateDB.month)) == month)
+                if (c.getInt(c.getColumnIndexOrThrow(CreateDB.year)) == year) {
+                    CalItem cit = new CalItem(c.getInt(c.getColumnIndexOrThrow(CreateDB.day)));
+                    cit.setYear(c.getInt(c.getColumnIndexOrThrow(CreateDB.year)));
+                    cit.setMonth(c.getInt(c.getColumnIndexOrThrow(CreateDB.month)));
+                    cit.setTime(c.getInt(c.getColumnIndexOrThrow(CreateDB.time)));
+                    cit.setMemo(c.getString(c.getColumnIndexOrThrow(CreateDB.memo)));
+                    ci[i++] = cit;
+                }
+        return ci;
+    }
+
+    public CalItem[] viewData(int year,int month) {
+        CalItem[] ci = new CalItem[10];
+        int i = 0;
+        mDB = mDBHelper.getReadableDatabase();
+
+        String[] projection = {
+                CreateDB._ID,
+                CreateDB.year,
+                CreateDB.month,
+                CreateDB.day,
+                CreateDB.time
+        };
+        String selection = CreateDB.month + " = ?";
+        String[] selectionArgs = {month + ""};
+        String sortOrder = CreateDB.month + " DESC";
+
+        Cursor c = mDB.query(
+                CreateDB._TABLENAME,
+                projection,
+                selection,
+                selectionArgs,
+                null,
+                null,
+                sortOrder
+        );
+        c.moveToFirst();
+        while (!c.isAfterLast())
+            if (c.getInt(c.getColumnIndexOrThrow(CreateDB.year)) == year) {
+                CalItem cit = new CalItem(c.getInt(c.getColumnIndexOrThrow(CreateDB.day)));
+                cit.setYear(c.getInt(c.getColumnIndexOrThrow(CreateDB.year)));
+                cit.setMonth(c.getInt(c.getColumnIndexOrThrow(CreateDB.month)));
+                cit.setTime(c.getInt(c.getColumnIndexOrThrow(CreateDB.time)));
+                cit.setMemo(c.getString(c.getColumnIndexOrThrow(CreateDB.memo)));
+                ci[i++] = cit;
+                }
+        return ci;
     }
 }
