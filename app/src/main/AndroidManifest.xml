@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.scheduler">
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -18,5 +20,9 @@
             </intent-filter>
         </activity>
     </application>
+
+    <service android:name=".NotificationService"
+        android:enabled="true"/>
+    <receiver android:name=".NotificationReceiver"/>
 
 </manifest>
