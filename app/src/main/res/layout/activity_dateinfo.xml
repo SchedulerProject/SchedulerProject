@@ -8,18 +8,17 @@
     <TextView
         android:id="@+id/DateNum"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.05"
-        android:text="TextView"
+        android:layout_height="25dp"
+        android:layout_weight="0.10"
         android:textAlignment="center"
-        android:textSize="30sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/Memo"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="40dp"
         android:layout_weight="0.05"
         android:textAlignment="textStart"
-        android:textSize="20sp" />
+        android:textSize="15dp" />
 
 </LinearLayout>
